@@ -8,7 +8,13 @@ interface StreakCounterProps {
 
 export function StreakCounter({ currentStreak, longestStreak }: StreakCounterProps) {
   const handleShare = () => {
-    const tweetText = `I reached ${currentStreak} ${currentStreak === 1 ? 'day' : 'days'} on the current streak! Ready to adapt a new workout routine for you? Join the movement at sweatexercise.bobibulba.xyz`;
+    const tweetText = `I reached ${currentStreak} ${currentStreak === 1 ? 'day' : 'days'} streak on SweatSnack!
+
+Ready to adapt a new workout style for you?
+
+Join the movement at sweatsnack.bobibulba.xyz
+
+Built using @chatandbuild`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
   };

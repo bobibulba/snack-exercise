@@ -2,20 +2,68 @@ import React, { useEffect, useState } from 'react';
 import { Calendar } from '../components/Calendar';
 import { AppState, ExerciseTemplate, TimeOfDay } from '../types';
 import { getTodayDateKey } from '../utils/dateUtils';
+import { defaultExercises, defaultTimeWindows } from '../data/defaultData';
 
 export function CalendarPage() {
   const [appState, setAppState] = useState<AppState | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load state from localStorage
-    const stored = localStorage.getItem('exercise-snacks-state');
-    if (stored) {
-      const state = JSON.parse(stored);
-      // Ensure historicalData exists
-      if (!state.historicalData) {
-        state.historicalData = {};
+    // Load state from localStorage with fallback to defaults
+    try {
+      const stored = localStorage.getItem('sweat-snack-state');
+      if (stored) {
+        const state = JSON.parse(stored);
+        // Ensure historicalData exists
+        if (!state.historicalData) {
+          state.historicalData = {};
+        }
+        // Ensure exerciseLibrary exists
+        if (!state.exerciseLibrary || state.exerciseLibrary.length === 0) {
+          state.exerciseLibrary = defaultExercises;
+        }
+        // Ensure timeWindows exists
+        if (!state.timeWindows) {
+          state.timeWindows = defaultTimeWindows;
+        }
+        // Ensure dailyGoal exists
+        if (!state.dailyGoal) {
+          state.dailyGoal = 3;
+        }
+        // Ensure todaySnacks exists
+        if (!state.todaySnacks) {
+          state.todaySnacks = [];
+        }
+        setAppState(state);
+      } else {
+        // Initialize with default state if nothing in localStorage
+        const defaultState: AppState = {
+          dailyGoal: 3,
+          todaySnacks: [],
+          exerciseLibrary: defaultExercises,
+          timeWindows: defaultTimeWindows,
+          historicalData: {},
+          currentStreak: 0,
+          longestStreak: 0
+        };
+        setAppState(defaultState);
+        localStorage.setItem('sweat-snack-state', JSON.stringify(defaultState));
       }
-      setAppState(state);
+    } catch (error) {
+      console.error('Error loading state:', error);
+      // Fallback to default state on error
+      const defaultState: AppState = {
+        dailyGoal: 3,
+        todaySnacks: [],
+        exerciseLibrary: defaultExercises,
+        timeWindows: defaultTimeWindows,
+        historicalData: {},
+        currentStreak: 0,
+        longestStreak: 0
+      };
+      setAppState(defaultState);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -50,12 +98,12 @@ export function CalendarPage() {
     };
 
     setAppState(newState);
-    localStorage.setItem('exercise-snacks-state', JSON.stringify(newState));
+    localStorage.setItem('sweat-snack-state', JSON.stringify(newState));
 
     // If adding to today, also update todaySnacks
     if (dateKey === getTodayDateKey()) {
       newState.todaySnacks = [...newState.todaySnacks, newSnack];
-      localStorage.setItem('exercise-snacks-state', JSON.stringify(newState));
+      localStorage.setItem('sweat-snack-state', JSON.stringify(newState));
     }
   };
 
@@ -85,7 +133,7 @@ export function CalendarPage() {
     }
 
     setAppState(newState);
-    localStorage.setItem('exercise-snacks-state', JSON.stringify(newState));
+    localStorage.setItem('sweat-snack-state', JSON.stringify(newState));
   };
 
   const handleRemoveSnack = (dateKey: string, snackId: string) => {
@@ -109,13 +157,24 @@ export function CalendarPage() {
     }
 
     setAppState(newState);
-    localStorage.setItem('exercise-snacks-state', JSON.stringify(newState));
+    localStorage.setItem('sweat-snack-state', JSON.stringify(newState));
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl font-bold text-black mb-2">LOADING...</p>
+          <div className="w-16 h-16 border-4 border-black border-t-[#FF005C] rounded-full animate-spin mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
 
   if (!appState) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-2xl font-bold">LOADING...</p>
+        <p className="text-2xl font-bold text-red-600">ERROR LOADING DATA</p>
       </div>
     );
   }
