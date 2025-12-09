@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Activity } from 'lucide-react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { defaultExercises, defaultTimeWindows } from './data/defaultData';
-import { ExerciseTemplate, DailySnack, AppState } from './types';
+import { ExerciseTemplate, DailySnack, AppState, TimeOfDay } from './types';
 import { getCurrentTimeWindow } from './utils/timeUtils';
 import { ReminderBanner } from './components/ReminderBanner';
 import { TodayOverview } from './components/TodayOverview';
@@ -38,13 +38,13 @@ function App() {
     });
   };
 
-  const handleAddToToday = (exercise: ExerciseTemplate) => {
+  const handleAddToToday = (exercise: ExerciseTemplate, timeOfDay: TimeOfDay) => {
     const newSnack: DailySnack = {
       id: `snack-${Date.now()}-${Math.random()}`,
       exerciseId: exercise.id,
       exerciseName: exercise.name,
       description: exercise.description,
-      timeOfDay: exercise.timeOfDay,
+      timeOfDay: timeOfDay,
       completed: false,
       timestamp: Date.now()
     };

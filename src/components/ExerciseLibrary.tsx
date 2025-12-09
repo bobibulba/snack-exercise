@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Plus, Dumbbell } from 'lucide-react';
+import { Plus, Dumbbell, ChevronDown } from 'lucide-react';
 import { ExerciseTemplate, TimeOfDay, Intensity } from '../types';
 
 interface ExerciseLibraryProps {
   exercises: ExerciseTemplate[];
-  onAddToToday: (exercise: ExerciseTemplate) => void;
+  onAddToToday: (exercise: ExerciseTemplate, timeOfDay: TimeOfDay) => void;
   onAddNewExercise: (exercise: Omit<ExerciseTemplate, 'id'>) => void;
 }
 
@@ -16,6 +16,7 @@ const intensityColors = {
 
 export function ExerciseLibrary({ exercises, onAddToToday, onAddNewExercise }: ExerciseLibraryProps) {
   const [showForm, setShowForm] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -35,6 +36,11 @@ export function ExerciseLibrary({ exercises, onAddToToday, onAddNewExercise }: E
       });
       setShowForm(false);
     }
+  };
+
+  const handleAddToTime = (exercise: ExerciseTemplate, timeOfDay: TimeOfDay) => {
+    onAddToToday(exercise, timeOfDay);
+    setOpenDropdown(null);
   };
 
   return (
@@ -143,17 +149,40 @@ export function ExerciseLibrary({ exercises, onAddToToday, onAddNewExercise }: E
               <p className="text-black font-semibold mb-3">{exercise.description}</p>
             )}
             
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-bold text-black bg-gray-200 px-3 py-1 border-2 border-black">
-                {exercise.timeOfDay.toUpperCase()}
-              </span>
-              <button
-                onClick={() => onAddToToday(exercise)}
-                className="bg-[#FF005C] border-2 border-black px-4 py-2 text-sm font-bold text-black shadow-[2px_2px_0_black] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_black] transition-all flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" strokeWidth={3} />
-                ADD TODAY
-              </button>
+            <div className="flex justify-end">
+              <div className="relative">
+                <button
+                  onClick={() => setOpenDropdown(openDropdown === exercise.id ? null : exercise.id)}
+                  className="bg-[#FF005C] border-2 border-black px-4 py-2 text-sm font-bold text-black shadow-[2px_2px_0_black] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_black] transition-all flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" strokeWidth={3} />
+                  ADD TODAY
+                  <ChevronDown className="w-4 h-4" strokeWidth={3} />
+                </button>
+
+                {openDropdown === exercise.id && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border-4 border-black shadow-[4px_4px_0_black] z-10">
+                    <button
+                      onClick={() => handleAddToTime(exercise, 'Morning')}
+                      className="w-full text-left px-4 py-3 text-sm font-bold text-black hover:bg-[#00F0FF] border-b-2 border-black transition-colors"
+                    >
+                      MORNING
+                    </button>
+                    <button
+                      onClick={() => handleAddToTime(exercise, 'Afternoon')}
+                      className="w-full text-left px-4 py-3 text-sm font-bold text-black hover:bg-[#FFD700] border-b-2 border-black transition-colors"
+                    >
+                      AFTERNOON
+                    </button>
+                    <button
+                      onClick={() => handleAddToTime(exercise, 'Evening')}
+                      className="w-full text-left px-4 py-3 text-sm font-bold text-black hover:bg-[#9D4EDD] transition-colors"
+                    >
+                      EVENING
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
