@@ -15,7 +15,7 @@ import { CalendarPage } from './pages/CalendarPage';
 
 function HomePage() {
   const navigate = useNavigate();
-  const [appState, setAppState] = useLocalStorage<AppState>('exercise-snacks-state', {
+  const [appState, setAppState] = useLocalStorage<AppState>('sweat-snack-state', {
     dailyGoal: 3,
     todaySnacks: [],
     exerciseLibrary: defaultExercises,
@@ -124,7 +124,7 @@ function HomePage() {
             <div className="flex items-center gap-4">
               <Activity className="w-12 h-12 text-[#00F0FF]" strokeWidth={3} />
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-white">EXERCISE SNACKS</h1>
+                <h1 className="text-4xl md:text-5xl font-bold text-white">SWEAT SNACK</h1>
                 <p className="text-[#00F0FF] text-lg font-semibold mt-1">MICRO-WORKOUTS. MAXIMUM IMPACT.</p>
               </div>
             </div>

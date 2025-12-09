@@ -71,7 +71,7 @@ export function Calendar({
         <header className="mb-8 bg-black border-4 border-black p-6 shadow-[8px_8px_0_#FF005C]">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-white">EXERCISE CALENDAR</h1>
+              <h1 className="text-4xl font-bold text-white">SWEAT SNACK CALENDAR</h1>
               <p className="text-[#00F0FF] text-lg font-semibold mt-1">TRACK YOUR PROGRESS • PLAN AHEAD</p>
             </div>
             <button
