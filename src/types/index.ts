@@ -17,6 +17,7 @@ export interface DailySnack {
   timeOfDay: TimeOfDay;
   completed: boolean;
   timestamp?: number;
+  dateKey?: string; // Format: YYYY-MM-DD
 }
 
 export interface TimeWindow {
@@ -25,9 +26,18 @@ export interface TimeWindow {
   endHour: number;
 }
 
+export interface HistoricalDay {
+  dateKey: string; // Format: YYYY-MM-DD
+  snacks: DailySnack[];
+  goalMet: boolean;
+}
+
 export interface AppState {
   dailyGoal: number;
   todaySnacks: DailySnack[];
   exerciseLibrary: ExerciseTemplate[];
   timeWindows: TimeWindow[];
+  historicalData: Record<string, HistoricalDay>; // dateKey -> HistoricalDay
+  currentStreak: number;
+  longestStreak: number;
 }

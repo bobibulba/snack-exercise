@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { DailySnack } from '../types';
 
 interface SnackItemProps {
   snack: DailySnack;
   onToggle: (id: string) => void;
+  onRemove: (id: string) => void;
 }
 
-export function SnackItem({ snack, onToggle }: SnackItemProps) {
+export function SnackItem({ snack, onToggle, onRemove }: SnackItemProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -30,14 +31,26 @@ export function SnackItem({ snack, onToggle }: SnackItemProps) {
           </h4>
         </div>
 
-        {snack.description && (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="p-2 hover:bg-gray-100 border-2 border-black"
-          >
-            {expanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {!snack.completed && (
+            <button
+              onClick={() => onRemove(snack.id)}
+              className="p-2 hover:bg-red-100 border-2 border-black bg-white transition-colors"
+              title="Remove exercise"
+            >
+              <X className="w-5 h-5 text-red-600" strokeWidth={3} />
+            </button>
+          )}
+
+          {snack.description && (
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="p-2 hover:bg-gray-100 border-2 border-black"
+            >
+              {expanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
+          )}
+        </div>
       </div>
 
       {expanded && snack.description && (

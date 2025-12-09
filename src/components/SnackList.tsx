@@ -6,6 +6,7 @@ import { Sunrise, Sun, Moon } from 'lucide-react';
 interface SnackListProps {
   snacks: DailySnack[];
   onToggle: (id: string) => void;
+  onRemove: (id: string) => void;
 }
 
 const timeOfDayConfig = {
@@ -14,7 +15,7 @@ const timeOfDayConfig = {
   Evening: { icon: Moon, color: '#9D4EDD' }
 };
 
-export function SnackList({ snacks, onToggle }: SnackListProps) {
+export function SnackList({ snacks, onToggle, onRemove }: SnackListProps) {
   const groupedSnacks = snacks.reduce((acc, snack) => {
     if (!acc[snack.timeOfDay]) {
       acc[snack.timeOfDay] = [];
@@ -53,7 +54,12 @@ export function SnackList({ snacks, onToggle }: SnackListProps) {
                   <h3 className="text-xl font-bold text-black">{timeOfDay.toUpperCase()}</h3>
                 </div>
                 {snacksForTime.map(snack => (
-                  <SnackItem key={snack.id} snack={snack} onToggle={onToggle} />
+                  <SnackItem 
+                    key={snack.id} 
+                    snack={snack} 
+                    onToggle={onToggle}
+                    onRemove={onRemove}
+                  />
                 ))}
               </div>
             );
